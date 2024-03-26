@@ -1,0 +1,57 @@
+name: GPI Staging Deploy
+run-name: Deploy to Staging
+# uncomment to enable
+# on: [push]
+
+jobs:
+  Deploy_Frontend:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '19.x'
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: src/frontend
+      - name: Build frontend
+        run: npm run build --if-present
+        env:
+          VUE_APP_BASE_URL: http://staging-${{ vars.PROJECT }}.${{ vars.STAGING_VM }}.sslip.io
+          VUE_APP_API_URL: http://staging-${{ vars.PROJECT }}.${{ vars.STAGING_VM }}.sslip.io/api
+        working-directory: src/frontend
+      - name: rsync deployments
+        uses: burnett01/rsync-deployments@7.0.0
+        with:
+          switches: -azr --no-perms --omit-dir-times --delete
+          path: src/frontend/dist/*
+          remote_path: /var/www/${{ vars.PROJECT }}/frontend/
+          remote_host: ${{ vars.STAGING_VM }}
+          remote_user: ${{ vars.STAGING_VM_USER }}  
+          remote_key: ${{ secrets.SSHKEY }}
+          remote_key_pass: ${{ secrets.SSHPASS }}
+  Deploy_Backend:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: rsync deployments
+        uses: burnett01/rsync-deployments@7.0.0
+        with:
+          switches: -azr --no-perms --omit-dir-times --delete --exclude '.env' --exclude 'node_modules/' --exclude "vendor" --exclude "public/storage" --exclude "storage/app" --exclude "storage/framework/cache" --exclude "composer.lock" 
+          path: src/backend/*
+          remote_path: /var/www/${{ vars.PROJECT }}/backend/
+          remote_host: ${{ vars.STAGING_VM }}
+          remote_user: ${{ vars.STAGING_VM_USER }}  
+          remote_key: ${{ secrets.SSHKEY }}
+          remote_key_pass: ${{ secrets.SSHPASS }}
+      - name: Run composer actions 
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: "${{ vars.STAGING_VM }}"
+          username: "${{ vars.STAGING_VM_USER }}"
+          key: ${{ secrets.SSHKEY }}
+          passphrase: ${{ secrets.SSHPASS }}
+          script: "cd /var/www/${{ vars.PROJECT }}/backend/ && composer update && composer dump-autoload"
