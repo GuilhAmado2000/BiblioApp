@@ -27,13 +27,21 @@ RUN apt-get update && apt-get install -y \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Copy the code of the application code to the container
-COPY . . 
+COPY . .
 
 # Install project dependencies
-RUN COMPOSER_ALLOW_SUPERUSER=1 composer install 
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+
+# Run all Laravel setup commands during build
+RUN php artisan config:clear && \
+    php artisan cache:clear && \
+    php artisan key:generate
+
+# Copy entrypoint script
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 # Expose port 8000 for the Laravel application
-EXPOSE 8081
+EXPOSE 8082
 
-# Run the Laravel application
-CMD php artisan serve --host=0.0.0.0 --port=8081
+ENTRYPOINT ["/entrypoint.sh"]

@@ -1,13 +1,14 @@
 version: '3.8'
-name: dei-local-dev
+name: biblio-service
 services:
     mysql:
         image: mysql:5.7
-        restart: always
+        restart: unless-stopped
         environment:
             MYSQL_ROOT_PASSWORD: docker
+            MYSQL_DATABASE: biblio
         ports:
-            - "13606:3606"
+            - "3307:3306"
     # uncomment the following lines to load a dump file
     #        volumes:
     #            - ./db_dump.sql:/docker-entrypoint-initdb.d/init.sql
@@ -16,13 +17,17 @@ services:
         build:
             context: ./backend
             dockerfile: Dockerfile
-        restart: always
+        restart: unless-stopped
         ports:
-            - "8081:8081"
+            - "8082:8082"
         volumes:
-            - ./backend/:/app/
+            - ./backend:/app:cached
+            - backend-vendor:/app/vendor
+            - backend-storage:/app/storage
         depends_on:
             - mysql
+        environment:
+            xdebug: false
 
     frontend:
         build:
@@ -30,7 +35,16 @@ services:
             dockerfile: Dockerfile
         volumes:
             - ./frontend:/app
-            - /app/node_modules
-        restart: always
+            - frontend-node-modules:/app/node_modules
+        restart: unless-stopped
         ports:
-            - "8080:8080"
+            - "8083:8080"
+        environment:
+            - CHOKIDAR_USEPOLLING=true # Enable polling for file changes
+            - WATCHPACK_POLLING=true
+            - VITE_HMR_PORT=8080
+volumes:
+    backend-vendor:
+    backend-storage:
+    mysql-data:
+    frontend-node-modules:
