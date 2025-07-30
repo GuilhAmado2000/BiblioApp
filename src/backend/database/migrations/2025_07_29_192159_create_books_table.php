@@ -25,6 +25,10 @@ return new class extends Migration
             $table->unsignedInteger('quantity');
             $table->unsignedInteger('rating');
 
+            $table->uuid('language_id');
+            $table->uuid('type_id');
+            $table->uuid('category_id');
+
             $table->dateTime('created_at', 3)->useCurrent();
             $table->dateTime('updated_at', 3);
         });

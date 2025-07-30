@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::table('books', function (Blueprint $table) {
             $table->foreign(['language_id'], 'books_language_id_fkey')->references(['id'])->on('languages')->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->foreign(['type_id'], 'books_type_id_fkey')->references(['id'])->on(['book_types'])->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->foreign(['category_id'], 'books_category_id_fkey')->references(['id'])->on(['categories'])->onUpdate('CASCADE')->onDelete('CASCADE');
+            $table->foreign(['type_id'], 'books_type_id_fkey')->references(['id'])->on('book_types')->onUpdate('CASCADE')->onDelete('CASCADE');
+            $table->foreign(['category_id'], 'books_category_id_fkey')->references(['id'])->on('categories')->onUpdate('CASCADE')->onDelete('CASCADE');
         });
     }
 
