@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libsodium-dev \
     libldap2-dev \
+    netcat-openbsd \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install zip sodium mysqli pdo pdo_mysql \

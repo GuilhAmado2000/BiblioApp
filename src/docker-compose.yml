@@ -8,7 +8,7 @@ services:
             MYSQL_ROOT_PASSWORD: docker
             MYSQL_DATABASE: biblio
         ports:
-            - "3307:3306"
+            - "3306:3306"
     # uncomment the following lines to load a dump file
     #        volumes:
     #            - ./db_dump.sql:/docker-entrypoint-initdb.d/init.sql

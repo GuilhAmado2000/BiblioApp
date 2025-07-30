@@ -1,22 +1,30 @@
 #!/bin/bash
-
-# Exit on any error
 set -e
 
-# Create storage link if it doesn't exist
+# Esperar pelo MySQL
+until nc -z -v -w30 mysql 3306
+do
+  echo "Aguardando o banco de dados iniciar..."
+  sleep 2
+done
+
+echo "Banco de dados está disponível, continuando..."
+
+# Cria o symlink do storage
 if [ ! -L public/storage ]; then
     php artisan storage:link
 fi
 
-# Check if database needs to be set up
+# Checa se já foi migrado
 if ! php artisan migrate:status > /dev/null 2>&1; then
-    echo "Setting up database for the first time..."
+    echo "Inicializando o banco de dados..."
     php artisan migrate --force
     php artisan db:seed --force
 else
-    echo "Database already exists, running pending migrations only..."
+    echo "Banco de dados já existe, executando migrações pendentes..."
     php artisan migrate --force
 fi
 
-# Start Laravel dev server
-exec php artisan serve --host=0.0.0.0 --port=8081
+# Inicia o servidor
+exec php artisan serve --host=0.0.0.0 --port=8082
+
