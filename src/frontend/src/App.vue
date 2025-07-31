@@ -15,7 +15,7 @@ import MainNavbar from '@/components/layout/MainNavbar.vue'
 
 <style scoped>
 .main-background {
-  background-color: #bedbff;
+  background-color: #ffe4c8;
   min-height: 100vh;
 }
 </style>
