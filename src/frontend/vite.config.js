@@ -23,7 +23,9 @@ export default defineConfig({
       usePolling: true, // Enable polling for hot reload
     },
     hmr: {
-      clientPort: 8080, // Ensure HMR works outside the container
+      protocol: 'ws',
+      host: 'localhost',
+      clientPort: 8083 // Ensure HMR works outside the container
     },
   },
 })
