@@ -17,6 +17,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'name',
         'username',
         'email',
         'password',
@@ -28,7 +29,6 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
         'remember_token',
     ];
 
@@ -39,9 +39,41 @@ class User extends Authenticatable
      */
     protected function casts(): array
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return [];
+    }
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims(): array
+    {
+        return [];
+    }
+
+    public static function FindOrCreate($data)
+    {
+        $user = self::where('username', $data['username'])->first();
+
+        if (!$user) {
+            $userData = $data;
+
+            if (isset($userData['password'])) {
+                $userData['password'] = Hash::make($userData['password']);
+            }
+
+            $user = self::create($userData);
+
+            if (preg_match('/^admin\./i', $data['username'])){
+                $user->profile = 'ADMINISTRATOR';
+            } else {
+                $user->profile = 'LEITOR';
+            }
+
+            $user->save();
+        }
+
+        return $user;
     }
 }
