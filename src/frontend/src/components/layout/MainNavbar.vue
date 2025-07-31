@@ -20,7 +20,7 @@ const faqButton = () => {
 </script>
 
 <template>
-  <v-progress-linear v-if="isLoggingOut" color="primary" fixed height="4" indeterminate top />
+  <!-- NAVBAR HORIZONTAL -->
   <!-- Fixa a navbar no inicio (top)/fim (bottom) da paginação -->
   <v-app-bar :elevation="2" location="top">
     <!-- prepend = conteúdo localizado à esquerda da barra (nav) -->
@@ -28,28 +28,19 @@ const faqButton = () => {
       <v-btn>
         <!-- Logotipo Plataforma BiblioApp -->
         <RouterLink to="/">
-          <v-img alt="Logo da plataforma" height="30" src="/LogotipoS.png" width="100"></v-img>
+          <v-img alt="Logo da plataforma" height="40" src="/abrev.png" width="100"></v-img>
         </RouterLink>
       </v-btn>
     </template>
 
+    <!-- TItulo da plataforma -->
+    <v-spacer />
+    <v-toolbar-title class="text-center font-weight-bold">
+      Bibli@lma
+    </v-toolbar-title>
+    <v-spacer />
+
     <template v-slot:append>
-      <!-- Botão About -->
-      <v-btn
-        class="me-2 custom-hover"
-        color="black"
-        variant="elevated"
-        @click="aboutButton"
-      >Acerca De
-      </v-btn>
-      <!-- Botão FAQ -->
-      <v-btn
-        class="me-2 custom-hover"
-        color="black"
-        variant="elevated"
-        @click="faqButton"
-      >FAQ
-      </v-btn>
       <v-btn
         class="me-2 custom-hover"
         color="blue"
@@ -59,6 +50,28 @@ const faqButton = () => {
       </v-btn>
     </template>
   </v-app-bar>
+  <v-progress-linear v-if="isLoggingOut" color="primary" fixed height="4" indeterminate top />
+
+  <!-- DRAWER LATERAL/VERTICAL -->
+  <v-navigation-drawer :elevation="2" app permanent width="180">
+    <v-list>
+      <v-list-item @click="loginButton">
+        <v-list-item-title>Gestão</v-list-item-title>
+      </v-list-item>
+      <v-list-item @click="aboutButton">
+        <v-list-item-title>Visualizar Livros</v-list-item-title>
+      </v-list-item>
+      <v-list-item @click="faqButton">
+        <v-list-item-title>Estatísticas</v-list-item-title>
+      </v-list-item>
+      <v-list-item @click="aboutButton">
+        <v-list-item-title>Acerca Bibli@lma</v-list-item-title>
+      </v-list-item>
+      <v-list-item @click="faqButton">
+        <v-list-item-title>FAQs</v-list-item-title>
+      </v-list-item>
+    </v-list>
+  </v-navigation-drawer>
 </template>
 
 <style scoped>
