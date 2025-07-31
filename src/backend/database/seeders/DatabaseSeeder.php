@@ -7,7 +7,6 @@ use App\Models\Category;
 use App\Models\Language;
 use App\Models\User;
 use Illuminate\Support\Str;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('email', 191)->unique();
             $table->string('name', 191);
             $table->string('password', 255);
+            $table->enum('profile', ['LEITOR', 'ADMINISTRATOR']);
             $table->string('image_perfil', 191)->nullable();
 
             $table->dateTime('created_at', 3)->useCurrent();
