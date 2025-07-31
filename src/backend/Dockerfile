@@ -36,7 +36,9 @@ RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 # Run all Laravel setup commands during build
 RUN php artisan config:clear && \
     php artisan cache:clear && \
-    php artisan key:generate
+    php artisan key:generate && \
+    php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\LaravelServiceProvider" && \
+    php artisan jwt:secret
 
 # Copy entrypoint script
 COPY docker/entrypoint.sh /entrypoint.sh
