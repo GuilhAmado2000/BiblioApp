@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('languages', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('name', 191)->unique();
-            $table->char('code', 2)->unique();
+        Schema::table('categories', function (Blueprint $table) {
+            $table->foreign(['parent_id'], 'categories_parent_id_fkey')->references(['id'])->on('categories')->onUpdate('CASCADE')->onDelete('CASCADE');
         });
     }
 
@@ -23,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('languages');
+        Schema::table('categories', function (Blueprint $table) {
+            $table->dropForeign('categories_parent_id_fkey');
+        });
     }
 };

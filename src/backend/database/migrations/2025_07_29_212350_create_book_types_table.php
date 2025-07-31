@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('book_types', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name', 191)->unique();
+            $table->string('description');
         });
     }
 

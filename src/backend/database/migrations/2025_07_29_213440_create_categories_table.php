@@ -14,6 +14,11 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name', 191)->unique();
+            $table->string('slug', 191)->unique()->nullable();
+            $table->uuid('parent_id')->nullable();
+
+            $table->dateTime('created_at', 3)->useCurrent();
+            $table->dateTime('updated_at', 3);
         });
     }
 
