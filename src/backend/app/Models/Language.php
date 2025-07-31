@@ -10,6 +10,8 @@ class Language extends Model
 {
     use HasUuids;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'name',
     ];
