@@ -14,5 +14,16 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
-  }
+  },
+  server: {
+    host: '0.0.0.0', // Allows access from outside the container
+    port: 8080,
+    strictPort: true,
+    watch: {
+      usePolling: true, // Enable polling for hot reload
+    },
+    hmr: {
+      clientPort: 8080, // Ensure HMR works outside the container
+    },
+  },
 })
