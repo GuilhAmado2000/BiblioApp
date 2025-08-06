@@ -16,6 +16,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Definir password a usar para contas locais
+        $localAccountPassword = env('LOCAL_ACCOUNT_PASSWORD', 'test');
+
+        // Criar contas locais de cada perfil
+        $user = \App\Models\User::FindOrCreate([
+            'username' => 'admin.alma',
+            'email' => 'admin@mail.com',
+            'name' => 'Administrador BIBLI@LMA',
+            'password' => $localAccountPassword
+        ]);
+
+        $user = \App\Models\User::FindOrCreate([
+            'username' => 'l.guilherme',
+            'email' => 'gui@mail.com',
+            'name' => 'Guilherme José Gomes Amado',
+            'password' => $localAccountPassword
+        ]);
+
         // Idiomas dos livros
         $languages = [
             ['name' => 'Português', 'code' => 'pt'],
