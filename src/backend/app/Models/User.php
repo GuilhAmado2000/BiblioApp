@@ -6,10 +6,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
+
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     /**
      * The attributes that are mass assignable.
@@ -67,7 +73,7 @@ class User extends Authenticatable
 
             if (preg_match('/^admin\./i', $data['username'])){
                 $user->profile = 'ADMINISTRATOR';
-            } else {
+            } elseif (preg_match('/^l\./i', $data['username'])) {
                 $user->profile = 'LEITOR';
             }
 
@@ -75,5 +81,16 @@ class User extends Authenticatable
         }
 
         return $user;
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = Str::uuid()->toString();
+            }
+        });
     }
 }
