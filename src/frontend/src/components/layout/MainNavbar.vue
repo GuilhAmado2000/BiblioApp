@@ -7,7 +7,7 @@ const isLoggingOut = ref(false)
 const router = useRouter()
 
 const loginButton = () => {
-  router.push('/')
+  router.push('/login')
 }
 
 const aboutButton = () => {
@@ -25,25 +25,24 @@ const faqButton = () => {
   <v-app-bar :elevation="2" location="top">
     <!-- prepend = conteúdo localizado à esquerda da barra (nav) -->
     <template v-slot:prepend>
-      <v-btn>
-        <!-- Logotipo Plataforma BiblioApp -->
-        <RouterLink to="/">
-          <v-img alt="Logo da plataforma" height="40" src="/abrev.png" width="100"></v-img>
-        </RouterLink>
-      </v-btn>
+      <!-- Logotipo Plataforma BiblioApp -->
+      <RouterLink to="/">
+        <v-img alt="Logo da plataforma" height="40" src="/abrev.png" width="100"></v-img>
+      </RouterLink>
     </template>
 
-    <!-- TItulo da plataforma -->
+    <!-- Titulo da plataforma -->
     <v-spacer />
     <v-toolbar-title class="text-center font-weight-bold">
       Bibli@lma
     </v-toolbar-title>
     <v-spacer />
 
+    <!-- Loggin da plataforma -->
     <template v-slot:append>
       <v-btn
         class="me-2 custom-hover"
-        color="blue"
+        color="brown"
         variant="elevated"
         @click="loginButton"
       >Login
@@ -76,10 +75,19 @@ const faqButton = () => {
 
 <style scoped>
 /* CSS dos Botões */
+.custom-hover {
+  transition: border 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  border: 3px solid transparent;
+  box-shadow: none !important;
+}
+
 .custom-hover:hover {
   background-color: white !important;
   color: black !important;
+  border: 3px solid #a5592a;
+  box-shadow: none !important;
 }
+
 
 /* CSS do Menu */
 .hover-list-item {
