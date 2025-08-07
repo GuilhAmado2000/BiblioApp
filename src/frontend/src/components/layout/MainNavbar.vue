@@ -1,9 +1,13 @@
 <script setup>
-import { RouterLink, useRouter } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { ref } from 'vue'
+import { useAuthStore } from '@/stores/authStore.js'
+import api from '@/plugins/axios.js'
 
 const isLoggingOut = ref(false)
 
+const authStore = useAuthStore()
+const route = useRoute()
 const router = useRouter()
 
 const loginButton = () => {
@@ -17,6 +21,20 @@ const aboutButton = () => {
 const faqButton = () => {
   router.push('/faq')
 }
+
+const logoutButton = async () => {
+  isLoggingOut.value = true
+  try {
+    await api.post('/logout')
+    authStore.logout()
+    await router.push({ name: 'Login' })
+    sessionStorage.clear()
+  } catch (error) {
+    console.log('Erro ao fazer logout', error)
+  } finally {
+    isLoggingOut.value = false
+  }
+}
 </script>
 
 <template>
@@ -26,7 +44,7 @@ const faqButton = () => {
     <!-- prepend = conteúdo localizado à esquerda da barra (nav) -->
     <template v-slot:prepend>
       <!-- Logotipo Plataforma BiblioApp -->
-      <RouterLink to="/">
+      <RouterLink to="/login">
         <v-img alt="Logo da plataforma" height="40" src="/abrev.png" width="100"></v-img>
       </RouterLink>
     </template>
@@ -41,11 +59,19 @@ const faqButton = () => {
     <!-- Loggin da plataforma -->
     <template v-slot:append>
       <v-btn
+        v-if="!authStore.isAuthenticated"
         class="me-2 custom-hover"
         color="brown"
         variant="elevated"
         @click="loginButton"
       >Login
+      </v-btn>
+      <v-btn
+        v-if="authStore.isAuthenticated"
+        class="me-2 logout"
+        variant="elevated"
+        @click="logoutButton"
+      >Logout
       </v-btn>
     </template>
   </v-app-bar>
@@ -54,19 +80,32 @@ const faqButton = () => {
   <!-- DRAWER LATERAL/VERTICAL -->
   <v-navigation-drawer :elevation="2" app permanent width="180">
     <v-list>
-      <v-list-item @click="loginButton">
+      <v-list-item
+        v-if="authStore.isAuthenticated"
+        :class="{ 'active-item': route.path === '/login' }"
+        @click="loginButton">
         <v-list-item-title>Gestão</v-list-item-title>
       </v-list-item>
-      <v-list-item @click="aboutButton">
+      <v-list-item
+        v-if="authStore.isAuthenticated"
+        :class="{ 'active-item': route.path === '/about' }"
+        @click="aboutButton">
         <v-list-item-title>Visualizar Livros</v-list-item-title>
       </v-list-item>
-      <v-list-item @click="faqButton">
+      <v-list-item
+        v-if="authStore.isAuthenticated"
+        :class="{ 'active-item': route.path === '/about' }"
+        @click="faqButton">
         <v-list-item-title>Estatísticas</v-list-item-title>
       </v-list-item>
-      <v-list-item @click="aboutButton">
+      <v-list-item
+        :class="{ 'active-item': route.path === '/about' }"
+        @click="aboutButton">
         <v-list-item-title>Acerca Bibli@lma</v-list-item-title>
       </v-list-item>
-      <v-list-item @click="faqButton">
+      <v-list-item
+        :class="{ 'active-item': route.path === '/faq' }"
+        @click="faqButton">
         <v-list-item-title>FAQs</v-list-item-title>
       </v-list-item>
     </v-list>
@@ -88,30 +127,35 @@ const faqButton = () => {
   box-shadow: none !important;
 }
 
-
-/* CSS do Menu */
-.hover-list-item {
-  transition:
-    background-color 0.3s,
-    color 0.3s;
-}
-
-.hover-list-item:hover {
-  cursor: pointer;
-  background-color: #1e88e5 !important;
-  color: white !important;
-}
-
 .logout {
-  background-color: white !important;
-  transition:
-    background-color 0.3s,
-    color 0.3s;
-  color: red !important;
+  transition: border 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  background-color: darkred !important;
+  color: white !important;
+  border: 3px solid transparent;
+  box-shadow: none !important;
 }
 
 .logout:hover {
-  background-color: red !important;
+  background-color: white !important;
+  color: darkred !important;
+  border: 3px solid darkred;
+  box-shadow: none !important;
+}
+
+.v-list-item {
+  transition: background-color 0.3s, color 0.3s;
+  cursor: pointer;
+}
+
+.v-list-item:hover {
+  background-color: #a5592a !important;
   color: white !important;
+  border: 3px solid transparent;
+}
+
+.active-item {
+  background-color: #a5592a !important;
+  color: white !important;
+  border: 3px solid transparent;
 }
 </style>
