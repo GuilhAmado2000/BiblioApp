@@ -51,52 +51,55 @@ const login = async () => {
 </script>
 
 <template>
-  <div class="overlay-container">
-    <!-- Overlay de carregamento -->
-    <div v-if="isLoading" class="loading-overlay">
-      <v-progress-circular indeterminate color="white" size="50" width="5" />
-    </div>
+  <!-- Conteúdo principal -->
+  <v-container class="login-container" fluid>
+    <!-- Alinhar cartão horizontalmente para o centro -->
+    <v-row justify="center" align="center">
+      <v-col cols="12" md="5">
+        <v-card class="pa-8" variant="outlined" style="border: 3px dashed #dd8e07;">
+          <!-- Titulo central amarelo de tamanho h4 e a negrito -->
+          <v-card-title class="text-center text-h4 font-weight-bold" style="white-space: normal">
+            Entrar na Bibli@lma
+          </v-card-title>
 
-    <!-- Conteúdo principal -->
-    <v-container class="fill-height" fluid>
-      <!-- Alinhar cartão horizontalmente para o centro -->
-      <v-row justify="center" align="center">
-        <v-col cols="12" md="5">
-          <v-card class="pa-8" variant="outlined" style="border: 3px dashed #dd8e07;">
-            <!-- Titulo central amarelo de tamanho h4 e a negrito -->
-            <v-card-title class="text-center text-h4 font-weight-bold" style="white-space: normal">
-              Entrar na Bibli@lma
-            </v-card-title>
+          <!-- Divisor -->
+          <v-divider class="mb-6" :thickness="3"></v-divider>
 
-            <!-- Divisor -->
-            <br><v-divider :thickness="3"></v-divider><br>
+          <v-form fast-fail @submit.prevent="login">
+            <!-- Campo Username -->
+            <v-text-field v-model="username" label="Nome de utilizador" required></v-text-field>
+            <!-- Campo Password -->
+            <v-text-field v-model="password" label="Senha" type="password" required></v-text-field>
+            <!-- Botão Login -->
+            <v-btn class="login-btn mt-4 font-weight-bold" type="submit" block>Login</v-btn>
+          </v-form>
 
-            <v-form fast-fail @submit.prevent="login">
-              <!-- Campo Username -->
-              <v-text-field v-model="username" label="Nome de utilizador" required></v-text-field>
-              <!-- Campo Password -->
-              <v-text-field v-model="password" label="Senha" type="password" required></v-text-field>
-              <!-- Botão Login -->
-              <v-btn class="login-btn mt-4 font-weight-bold" type="submit" block>Login</v-btn>
-            </v-form>
+          <!-- Link "Esqueceu a palavra-passe?" -->
+          <v-btn class="mt-4 text-none" variant="text" color="primary" block @click="forgotPassword">Esqueceu a palavra-passe?</v-btn>
 
-            <!-- Link "Esqueceu a palavra-passe?" -->
-            <v-btn class="mt-4 text-none" variant="text" color="primary" block @click="forgotPassword">Esqueceu a palavra-passe?</v-btn>
+          <br>
+          <v-alert v-if="loginFailed" type="error">
+            <strong>Erro a efetuar login!</strong> Verifique o nome de utilizador e a palavra-passe.
+          </v-alert>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 
-            <br>
-            <v-alert v-if="loginFailed" type="error">
-              <strong>Erro a efetuar login!</strong> Verifique o nome de utilizador e a password.
-            </v-alert>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
+  <!-- Overlay de carregamento -->
+  <div v-if="isLoading" class="loading-overlay">
+    <v-progress-circular indeterminate color="white" size="50" width="5" />
   </div>
 </template>
 
 <style scoped>
-.overlay-container {
-  position: relative;
+.login-container {
+  height: 100%;                /* Ocupa 100% da altura da janela */
+  display: flex;                /* Flexbox para alinhamento */
+  align-items: center;          /* Alinha verticalmente */
+  justify-content: center;      /* Alinha horizontalmente */
+  padding: 16px;                /* Espaço para telas pequenas */
+  box-sizing: border-box;
 }
 
 .loading-overlay {
@@ -113,7 +116,7 @@ const login = async () => {
   justify-content: center;
 }
 
-.v-card{
+.v-card {
   background-color: white;
 }
 
