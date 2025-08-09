@@ -39,6 +39,16 @@ class Book extends Model
         );
     }
 
+    public function usersToBook()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'book_user',
+            'book_id',
+            'user_id'
+        );
+    }
+
     public function type()
     {
         return $this->belongsTo(BookType::class);

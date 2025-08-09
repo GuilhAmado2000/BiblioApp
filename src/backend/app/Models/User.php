@@ -93,4 +93,14 @@ class User extends Authenticatable implements JWTSubject
             }
         });
     }
+
+    public function booksToUser()
+    {
+        return $this->belongsToMany(
+            Book::class,
+            'book_user',
+            'user_id',
+            'book_id'
+        );
+    }
 }
