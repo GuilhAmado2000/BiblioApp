@@ -32,12 +32,14 @@ const login = async () => {
         }
       });
 
+    // Guardar token e dados do utilizador
     const token = response.data.token;
     authStore.setToken(token);
     authStore.setUserId(response.data.user.id);
     authStore.setUsername(response.data.user.username);
     authStore.setUserType(response.data.user.type);
 
+    // Redirecionar para o dashboard
     await router.push({ name: 'Dashboard' });
 
   } catch (error) {

@@ -16,7 +16,8 @@ const routes = [
   {
     path: '/',
     name: 'Dashboard',
-    component: DashboardView
+    component: DashboardView,
+    meta: { requiresAuth: true },
   },
   {
     path: '/about',
