@@ -38,6 +38,7 @@ const login = async () => {
     authStore.setToken(token);
     authStore.setUserId(response.data.user.id);
     authStore.setUsername(response.data.user.username);
+    authStore.setName(response.data.user.name);
     authStore.setUserType(response.data.user.type);
 
     // Redirecionar para o dashboard

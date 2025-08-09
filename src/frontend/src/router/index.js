@@ -4,6 +4,8 @@ import DashboardView from '@/views/DashboardView.vue'
 import FaqView from '@/views/FaqView.vue'
 import LoginView from '@/views/LoginView.vue'
 import SignUpView from '@/views/SignUpView.vue'
+import StatisticsView from '@/views/StatisticsView.vue'
+import BookManagementView from '@/views/BookManagementView.vue'
 
 const routes = [
   {
@@ -38,6 +40,18 @@ const routes = [
     path: '/sign_up',
     name: 'SignUp',
     component: SignUpView
+  },
+  {
+    path: '/book-management',
+    name: 'BookManagement',
+    component: BookManagementView,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/statistics',
+    name: 'Statistics',
+    component: StatisticsView,
+    meta: { requiresAuth: true },
   }
 ]
 

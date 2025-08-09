@@ -78,6 +78,7 @@ const register = async () => {
         authStore.setToken(token)
         authStore.setUserId(loginResponse.data.user.id)
         authStore.setUsername(loginResponse.data.user.username)
+        authStore.setName(loginResponse.data.user.name)
         authStore.setUserType(loginResponse.data.user.type)
 
         // Redirecionar para o dashboard
