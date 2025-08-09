@@ -14,12 +14,20 @@ const loginButton = () => {
   router.push('/login')
 }
 
-const aboutButton = () => {
-  router.push('/about')
+const bookManagementButton = () => {
+  router.push('/book-management')
+}
+
+const statisticsButton = () => {
+  router.push('/statistics')
 }
 
 const faqButton = () => {
   router.push('/faq')
+}
+
+const aboutButton = () => {
+  router.push('/about')
 }
 
 const logoutButton = async () => {
@@ -82,31 +90,25 @@ const logoutButton = async () => {
     <v-list>
       <v-list-item
         v-if="authStore.isAuthenticated"
-        :class="{ 'active-item': route.path === '/login' }"
-        @click="loginButton">
-        <v-list-item-title>Gestão</v-list-item-title>
+        :class="{ 'active-item': route.path === '/book-management' }"
+        @click="bookManagementButton">
+        <v-list-item-title>Gestão de Livros</v-list-item-title>
       </v-list-item>
       <v-list-item
         v-if="authStore.isAuthenticated"
-        :class="{ 'active-item': route.path === '/about' }"
-        @click="aboutButton">
-        <v-list-item-title>Visualizar Livros</v-list-item-title>
-      </v-list-item>
-      <v-list-item
-        v-if="authStore.isAuthenticated"
-        :class="{ 'active-item': route.path === '/about' }"
-        @click="faqButton">
+        :class="{ 'active-item': route.path === '/statistics' }"
+        @click="statisticsButton">
         <v-list-item-title>Estatísticas</v-list-item-title>
-      </v-list-item>
-      <v-list-item
-        :class="{ 'active-item': route.path === '/about' }"
-        @click="aboutButton">
-        <v-list-item-title>Acerca Bibli@lma</v-list-item-title>
       </v-list-item>
       <v-list-item
         :class="{ 'active-item': route.path === '/faq' }"
         @click="faqButton">
         <v-list-item-title>FAQs</v-list-item-title>
+      </v-list-item>
+      <v-list-item
+        :class="{ 'active-item': route.path === '/about' }"
+        @click="aboutButton">
+        <v-list-item-title>Acerca Bibli@lma</v-list-item-title>
       </v-list-item>
     </v-list>
   </v-navigation-drawer>
