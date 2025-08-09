@@ -48,6 +48,13 @@ const login = async () => {
   }
 }
 
+const forgotPassword = () => {
+  router.push('/faq')
+}
+
+const signUp = () => {
+  router.push('/sign_up')
+}
 </script>
 
 <template>
@@ -65,6 +72,7 @@ const login = async () => {
           <!-- Divisor -->
           <v-divider class="mb-6" :thickness="3"></v-divider>
 
+          <!-- Formulário do Login -->
           <v-form fast-fail @submit.prevent="login">
             <!-- Campo Username -->
             <v-text-field v-model="username" label="Nome de utilizador" required></v-text-field>
@@ -76,6 +84,8 @@ const login = async () => {
 
           <!-- Link "Esqueceu a palavra-passe?" -->
           <v-btn class="mt-4 text-none" variant="text" color="primary" block @click="forgotPassword">Esqueceu a palavra-passe?</v-btn>
+          <!-- Link "Registar uma conta" -->
+          <v-btn class="text-none" variant="text" color="primary" block @click="signUp">Ainda não tem uma conta? Regista agora</v-btn>
 
           <br>
           <v-alert v-if="loginFailed" type="error">

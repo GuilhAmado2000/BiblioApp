@@ -17,7 +17,7 @@
           <v-card-subtitle class="text-center text-subtitle-1">Version 1.0</v-card-subtitle>
 
           <!-- Divisor -->
-          <br><v-divider :thickness="5"></v-divider><br>
+          <v-divider class="my-6" :thickness="5"></v-divider>
 
           <!-- Titulo Acerca da Plataforma -->
           <!--<v-card-title class="text-center text-h4">Acerca da Bibli@lma</v-card-title>-->
@@ -54,3 +54,5 @@
   background-color: white;
 }
 </style>
+<script setup lang="ts">
+</script>

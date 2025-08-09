@@ -17,7 +17,7 @@
           </v-card-subtitle>
 
           <!-- Divisor -->
-          <br><v-divider :thickness="5"></v-divider><br>
+          <v-divider class="my-6" :thickness="5"></v-divider>
 
           <!-- Painel das FAQs em que permite abrir uma janela de pergunta de cada vez -->
           <!-- Para remover sombreado faz elevation="0" -->

@@ -17,3 +17,9 @@
     </v-row>
   </v-container>
 </template>
+
+<style scoped>
+.v-card{
+  background-color: white;
+}
+</style>
