@@ -6,6 +6,7 @@ import api from '@/plugins/axios.js'
 
 const username = ref('');
 const password = ref('');
+
 const router = useRouter();
 const loginFailed = ref(false);
 const authStore = useAuthStore();
