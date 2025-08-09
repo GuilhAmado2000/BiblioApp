@@ -2,6 +2,8 @@
 
 import { ref } from 'vue'
 import api from '@/plugins/axios.js'
+import { useAuthStore } from '@/stores/authStore.js'
+import { useRouter } from 'vue-router'
 
 const showPassword = ref(false)
 const showPasswordConfirmation = ref(false)
@@ -18,7 +20,12 @@ const passwordMatchRule = v => v === userForm.value.password || 'As palavras-pas
 const check_politica = ref(false)
 const check_termos = ref(false)
 
-const isLoading = ref(false);
+const showSuccess = ref(false)
+
+const router = useRouter();
+const authStore = useAuthStore()
+
+const isLoading = ref(false)
 
 const userForm = ref({
   firstName: '',
@@ -39,6 +46,7 @@ const register = async () => {
 
   try {
     if (userForm.value.username === '' || userForm.value.email === '' || userForm.value.password === '') {
+      isLoading.value = false
       return;
     }
 
@@ -50,8 +58,34 @@ const register = async () => {
       password_confirmation: userForm.value.password_confirmation,
     }
 
-    await api.post('/create', payload)
+    // Criar utilizador
+    await api.post('/users/create', payload)
 
+    // Mostrar mensagem de sucesso
+    showSuccess.value = true
+
+    // Esperar 2 segundos para o usuário ver a mensagem
+    setTimeout(async () => {
+      try {
+        // Fazer login automático após criar a conta
+        const loginResponse = await api.post('/login', {
+          username: 'l.' + userForm.value.username,
+          password: userForm.value.password
+        })
+
+        // Guardar token e dados do utilizador
+        const token = loginResponse.data.token
+        authStore.setToken(token)
+        authStore.setUserId(loginResponse.data.user.id)
+        authStore.setUsername(loginResponse.data.user.username)
+        authStore.setUserType(loginResponse.data.user.type)
+
+        // Redirecionar para o dashboard
+        await router.push({ name: 'Dashboard' })
+      } catch (loginError) {
+        console.error('Erro no login automático:', loginError)
+      }
+    }, 2000)
 
   } catch (error) {
     console.log('Falha ao criar utilizador:', error)
@@ -199,6 +233,19 @@ const register = async () => {
   <div v-if="isLoading" class="loading-overlay">
     <v-progress-circular indeterminate color="white" size="50" width="5" />
   </div>
+
+  <!-- Snackbar -->
+  <v-snackbar
+    v-model="showSuccess"
+    color="success"
+    timeout="2000"
+    location="top center"
+    variant="flat"
+    class="success-snackbar"
+  >
+    <v-icon start>mdi-check-circle</v-icon>
+    Conta criada com sucesso! A iniciar sessão...
+  </v-snackbar>
 </template>
 
 <style scoped>
@@ -229,4 +276,10 @@ const register = async () => {
   background-color: white !important;
   color: black !important;
 }
+
+.success-snackbar {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
 </style>
