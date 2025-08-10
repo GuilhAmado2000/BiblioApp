@@ -2,6 +2,7 @@
 import { useAuthStore } from '@/stores/authStore.js'
 import { onMounted, ref } from 'vue'
 import api from '@/plugins/axios.js'
+import AddBookView from '@/components/book-management/AddBookView.vue'
 
 const authStore = useAuthStore()
 
@@ -32,6 +33,12 @@ onMounted(async () => {
 
           <!-- Divisor -->
           <v-divider class="my-6" :thickness="5"></v-divider>
+
+          <v-row class="w-100 d-flex justify-space-between align-center" dense>
+            <v-col cols="12" sm="4" md="3">
+              <AddBookView />
+            </v-col>
+          </v-row>
 
           <!-- Lista de livros -->
           <v-row>
