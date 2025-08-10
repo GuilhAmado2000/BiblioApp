@@ -10,6 +10,13 @@ const addDialog = ref(false)
 const formIsValid = ref(false)
 
 const requiredRule = (v) => !!v || 'Campo obrigatório!'
+const numberRule = v => v >= 0 || 'Não pode ser negativo'
+
+const authors = ref([])
+const publishers = ref([])
+const languages = ref([])
+const types = ref([])
+const categories = ref([])
 
 const bookForm = ref({
   isbn: '',
@@ -19,16 +26,71 @@ const bookForm = ref({
   publication_date: '',
   description: '',
   pages: '',
-  image: '',
+  image: null,
   price: '',
   quantity: '',
   language: '',
   type: '',
-  category: ''
+  category: '',
+  author: '',
+  publisher: '',
 })
+
+const priceInput = ref('')
+
+function formatPrice() {
+  if (!priceInput.value) return
+  const numeric = parseFloat(
+    priceInput.value.replace(/\./g, '').replace(',', '.')
+  )
+  if (!isNaN(numeric)) {
+    priceInput.value = numeric.toLocaleString('pt-PT', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })
+    bookForm.value.price = numeric // número puro para enviar ao backend
+  }
+}
 
 onMounted(async () => {
   isLoading.value = true
+
+  try {
+    const authorsResp = await api.get('/author/')
+    authors.value = authorsResp.data.map(author => ({
+      id: author.id,
+      name: author.name,
+    }))
+
+    const publishersResp = await api.get('/publisher/')
+    publishers.value = publishersResp.data.map(publisher => ({
+      id: publisher.id,
+      name: publisher.name,
+    }))
+
+    const languagesResp = await api.get('/language/')
+    languages.value = languagesResp.data.map(language => ({
+      id: language.id,
+      name: language.name,
+    }))
+
+    const typesResp = await api.get('/type/')
+    types.value = typesResp.data.map(type => ({
+      id: type.id,
+      name: type.name + ' (' + type.description + ')',
+    }))
+
+    const categoriesResp = await api.get('/category/')
+    categories.value = categoriesResp.data.map(category => ({
+      id: category.id,
+      name: category.name,
+    }))
+  } catch (error) {
+    console.log('Erro ao carregar os idiomas:', error)
+  } finally {
+    isLoading.value = false
+  }
+
   isLoading.value = false
 })
 
@@ -53,13 +115,10 @@ const addBook = async () => {
     }
 
     await api.post('/book-management/', payload)
-
-  } catch (error)
-  {
+  } catch (error) {
     console.log('Erro ao criar livro:', error)
   } finally {
     isLoading.value = false
-
   }
 }
 </script>
@@ -95,7 +154,7 @@ const addBook = async () => {
           <v-card-text class="px-4" style="height: 600px; overflow-y: auto">
             <v-form v-model="formIsValid">
               <v-row>
-                <v-col cols="12" md="6">
+                <v-col cols="12" md="4">
                   <!-- ISBN -->
                   <v-text-field
                     dense
@@ -106,7 +165,7 @@ const addBook = async () => {
                     :rules="[requiredRule]"
                   />
                 </v-col>
-                <v-col cols="12" md="6">
+                <v-col cols="12" md="4">
                   <!-- Código do Livro -->
                   <v-text-field
                     dense
@@ -117,6 +176,19 @@ const addBook = async () => {
                     :rules="[requiredRule]"
                   />
                 </v-col>
+                <v-col cols="12" md="4">
+                  <!-- Quantidade -->
+                  <v-text-field
+                    dense
+                    variant="outlined"
+                    v-model="bookForm.quantity"
+                    label="Qtd."
+                    type="number"
+                    min="0"
+                    required
+                    :rules="[requiredRule, numberRule]"
+                  />
+                </v-col>
               </v-row>
 
               <!-- Título do Livro -->
@@ -124,72 +196,174 @@ const addBook = async () => {
                 dense
                 variant="outlined"
                 v-model="bookForm.name"
-                label="Título do livro"
+                label="Título"
                 required
                 :rules="[requiredRule]"
               />
 
               <v-row>
-                <v-col cols="12" md="3">
+                <v-col cols="12" md="6">
+                  <!-- Autor -->
+                  <v-select
+                    dense
+                    variant="outlined"
+                    v-model="bookForm.author"
+                    label="Autores"
+                    :items="authors"
+                    item-title="name"
+                    item-value="id"
+                    required
+                    :rules="[requiredRule]"
+                  >
+                    <template #append-item>
+                      <v-divider class="mt-2 mb-2"></v-divider>
+                      <v-list-item @click="showAddPlanDialog = true">
+                        <v-list-item-title class="text-primary">+ Adicionar autor</v-list-item-title>
+                      </v-list-item>
+                    </template>
+                  </v-select>
+                </v-col>
+
+                <v-col cols="12" md="6">
+                  <!-- Editora -->
+                  <v-select
+                    dense
+                    variant="outlined"
+                    v-model="bookForm.publisher"
+                    label="Editora"
+                    :items="publishers"
+                    item-title="name"
+                    item-value="id"
+                    required
+                    :rules="[requiredRule]"
+                  >
+                    <template #append-item>
+                      <v-divider class="mt-2 mb-2"></v-divider>
+                      <v-list-item @click="showAddPlanDialog = true">
+                        <v-list-item-title class="text-primary">+ Adicionar editora</v-list-item-title>
+                      </v-list-item>
+                    </template>
+                  </v-select>
+                </v-col>
+              </v-row>
+
+              <v-row>
+                <v-col cols="12" md="2">
                   <!-- Edição do Livro -->
                   <v-text-field
                     dense
                     variant="outlined"
                     v-model="bookForm.edition"
-                    label="Número de edição"
+                    label="N.º de edição"
                     required
                     :rules="[requiredRule]"
                   />
                 </v-col>
-                <v-col cols="12" md="3">
+                <v-col cols="12" md="2">
                   <!-- Data de Publicação (mês e ano) -->
                   <v-text-field
                     dense
                     variant="outlined"
                     v-model="bookForm.publication_date"
-                    label="Data de Publicação (mês e ano)"
+                    label="Publicação (mês e ano)"
                     type="month"
                     required
                     :rules="[requiredRule]"
                   />
                 </v-col>
-                <v-col cols="12" md="3">
+                <v-col cols="12" md="2">
                   <!-- Número de páginas -->
                   <v-text-field
                     dense
                     variant="outlined"
                     v-model="bookForm.pages"
                     type="number"
-                    label="Número de páginas"
+                    label="N.º de páginas"
+                    min="0"
                     required
-                    :rules="[requiredRule]"
+                    :rules="[requiredRule, numberRule]"
                   />
                 </v-col>
-                <v-col cols="12" md="3">
+                <v-col cols="12" md="2">
                   <!-- Preço do livro -->
                   <v-text-field
                     dense
                     variant="outlined"
-                    v-model="bookForm.price"
+                    v-model="priceInput"
                     label="Preço"
-                    prefix="€"
+                    prepend-inner-icon="mdi-currency-eur"
                     required
                     :rules="[requiredRule]"
+                    @blur="formatPrice"
+                  />
+                </v-col>
+                <v-col cols="12" md="4">
+                  <v-file-input
+                    dense
+                    variant="outlined"
+                    v-model="bookForm.image"
+                    label="Capa"
+                    accept="image/*"
+                    prepend-inner-icon="mdi-image"
                   />
                 </v-col>
               </v-row>
 
               <!-- Descrição do Livro -->
-              <v-text-field
+              <v-textarea
                 dense
                 variant="outlined"
                 v-model="bookForm.description"
                 type="text"
-                label="Descrição breve do Livro"
+                label="Descrição breve"
                 required
                 :rules="[requiredRule]"
               />
 
+              <v-row>
+                <v-col cols="12" md="4">
+                  <!-- Idioma -->
+                  <v-select
+                    dense
+                    variant="outlined"
+                    v-model="bookForm.language"
+                    label="Idioma"
+                    :items="languages"
+                    item-title="name"
+                    item-value="id"
+                    required
+                    :rules="[requiredRule]"
+                  />
+                </v-col>
+                <v-col cols="12" md="4">
+                  <!-- Tipo -->
+                  <v-select
+                    dense
+                    variant="outlined"
+                    v-model="bookForm.type"
+                    label="Tipo"
+                    :items="types"
+                    item-title="name"
+                    item-value="id"
+                    required
+                    :rules="[requiredRule]"
+                  />
+                </v-col>
+                <v-col cols="12" md="4">
+                  <!-- Categoria -->
+                  <v-select
+                    dense
+                    variant="outlined"
+                    v-model="bookForm.category"
+                    label="Categoria"
+                    :items="categories"
+                    item-title="name"
+                    item-value="id"
+                    required
+                    :rules="[requiredRule]"
+                  />
+                </v-col>
+              </v-row>
             </v-form>
           </v-card-text>
           <v-divider></v-divider>
