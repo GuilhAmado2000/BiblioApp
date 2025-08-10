@@ -79,9 +79,22 @@ const signUp = () => {
           <!-- Formulário do Login -->
           <v-form fast-fail @submit.prevent="login">
             <!-- Campo Username -->
-            <v-text-field v-model="username" label="Nome de utilizador" required></v-text-field>
+            <v-text-field
+              variant="outlined"
+              v-model="username"
+              label="Nome de utilizador"
+              prepend-inner-icon="mdi-email-outline"
+              required
+            />
             <!-- Campo Password -->
-            <v-text-field v-model="password" label="Senha" type="password" required></v-text-field>
+            <v-text-field
+              variant="outlined"
+              v-model="password"
+              label="Senha"
+              type="password"
+              prepend-inner-icon="mdi-lock-outline"
+              required
+            />
             <!-- Botão Login -->
             <v-btn class="login-btn mt-4 font-weight-bold" type="submit" block>Login</v-btn>
           </v-form>

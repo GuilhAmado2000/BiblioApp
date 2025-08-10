@@ -119,9 +119,10 @@ const register = async () => {
               <v-col cols="12" md="6">
                 <v-text-field
                   dense
-                  outlined
+                  variant="outlined"
                   v-model="userForm.firstName"
                   label="Primeiro Nome"
+                  prepend-inner-icon="mdi-account"
                   required
                   :rules="[requiredRule]"
                   />
@@ -129,9 +130,10 @@ const register = async () => {
               <v-col cols="12" md="6">
                 <v-text-field
                   dense
-                  outlined
+                  variant="outlined"
                   v-model="userForm.lastName"
                   label="Último Nome"
+                  prepend-inner-icon="mdi-account"
                   required
                   :rules="[requiredRule]"
                   />
@@ -143,9 +145,10 @@ const register = async () => {
               <v-col cols="12" md="6">
                 <v-text-field
                   dense
-                  outlined
+                  variant="outlined"
                   v-model="userForm.username"
                   label="Username"
+                  prepend-inner-icon="mdi-account-key"
                   required
                   :rules="[requiredRule, usernameRule]">
                   <template #prepend-inner>
@@ -163,10 +166,11 @@ const register = async () => {
             <!-- Campo Email -->
             <v-text-field
               dense
-              outlined
+              variant="outlined"
               v-model="userForm.email"
               label="Email"
               type="email"
+              prepend-inner-icon="mdi-email-outline"
               required
               :rules="[requiredRule]"
               class="mb-4"
@@ -177,12 +181,13 @@ const register = async () => {
               <v-col cols="12" md="6">
                 <v-text-field
                       dense
-                      outlined
+                      variant="outlined"
                       v-model="userForm.password"
                       label="Palavra-Passe"
                       :type="showPassword ? 'text' : 'password'"
                       :append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
                       @click:append="showPassword = !showPassword"
+                      prepend-inner-icon="mdi-lock-outline"
                       required
                       :rules="[requiredRule, passwordRule]"
                 />
@@ -190,12 +195,13 @@ const register = async () => {
               <v-col cols="12" md="6">
                 <v-text-field
                       dense
-                      outlined
+                      variant="outlined"
                       v-model="userForm.password_confirmation"
                       label="Confirmar Palavra-Passe"
                       :type="showPasswordConfirmation ? 'text' : 'password'"
                       :append-icon="showPasswordConfirmation ? 'mdi-eye-off' : 'mdi-eye'"
                       @click:append="showPasswordConfirmation = !showPasswordConfirmation"
+                      prepend-inner-icon="mdi-lock-outline"
                       required
                       :rules="[requiredRule, passwordMatchRule]"
                 />
